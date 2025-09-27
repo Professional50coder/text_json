@@ -1,0 +1,71 @@
+# Python
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.pdb
+*.egg
+*.eggs
+*.env
+.env
+venv/
+ENV/
+env/
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+*.ipynb
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Outputs
+outputs/
+*.out
+*.tmp
+*.bak
+
+# FastAPI
+*.sqlite3
+
+# MongoDB
+*.mongodb
+
+# Audio/Video
+*.wav
+*.mp3
+*.mp4
+*.m4a
+*.flac
+*.ogg
+
+# PDF
+*.pdf
+
+# Misc
+*.swp
+*.swo
+
+# Ignore test results
+*.pytest_cache/
+
+# Ignore package management
+pip-wheel-metadata/
+__pypackages__/
+
+# Ignore build
+build/
+dist/
+*.egg-info/
+
+# Ignore secrets
+secrets.env
