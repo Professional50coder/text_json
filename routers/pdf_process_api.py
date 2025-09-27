@@ -1,42 +1,32 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
+import requests
+from llm_workflows.structured_template import get_structured_business_plan
 import os
 import logging
-from utils.full_multi_updated2 import get_unique_filename, convert_pdf_to_images, perform_ocr_on_image, process_ocr_response_to_structured_json, save_results, client, IMAGE_DPI, OUTPUT_DIR, CLEAN_IMAGES
+from utils.full_multi_updated2 import convert_pdf_to_images, perform_ocr_on_image, process_ocr_response_to_structured_json, save_results, client, IMAGE_DPI, OUTPUT_DIR, CLEAN_IMAGES
 
 
 class PDFProcessRequest(BaseModel):
-    pdf_path: str = None
     pdf_link: str = None
 
 router = APIRouter()
 
 @router.post("/process-pdf")
 async def process_pdf_api(payload: PDFProcessRequest):
-    pdf_path = payload.pdf_path
     pdf_link = payload.pdf_link
-
-    # Use pdf_path if provided, else pdf_link
-    if pdf_path and os.path.exists(pdf_path):
-        pdf_to_use = pdf_path
-    elif pdf_link:
-        # Download PDF from link
-        import requests
-        response = requests.get(pdf_link)
-        if response.status_code == 200:
-            temp_pdf_path = os.path.join(OUTPUT_DIR, "temp_input.pdf")
-            with open(temp_pdf_path, "wb") as f:
-                f.write(response.content)
-            pdf_to_use = temp_pdf_path
-        else:
-            raise HTTPException(status_code=400, detail="Failed to download PDF from link.")
+    response = requests.get(pdf_link)
+    if response.status_code == 200:
+        temp_pdf_path = os.path.join(OUTPUT_DIR, "temp_input.pdf")
+        with open(temp_pdf_path, "wb") as f:
+            f.write(response.content)
+        pdf_to_use = temp_pdf_path
     else:
-        raise HTTPException(status_code=400, detail="No valid PDF path or link provided.")
+        raise HTTPException(status_code=400, detail="Failed to download PDF from link.")
 
     # Run the OCR pipeline
     try:
-        unique_filename = get_unique_filename(pdf_to_use)
         image_files = convert_pdf_to_images(pdf_to_use, OUTPUT_DIR, IMAGE_DPI)
         all_pages_data = []
         for i, image_path in enumerate(image_files):
@@ -45,10 +35,19 @@ async def process_pdf_api(payload: PDFProcessRequest):
             all_pages_data.append(page_data)
             if CLEAN_IMAGES:
                 os.remove(image_path)
-        saved_files = save_results(all_pages_data, OUTPUT_DIR, unique_filename)
         # Return the main JSON result as a string under 'json_data'
         import json
-        return {"json_data": json.dumps(all_pages_data, ensure_ascii=False)}
+
+        structured_data = get_structured_business_plan(all_pages_data)
+
+        print("results", structured_data)
+
+        return {
+            "transcribe": json.dumps(all_pages_data, ensure_ascii=False),
+            "structured_data": structured_data
+        }
+    
+
     except Exception as e:
         logging.error(f"API error: {e}")
         raise HTTPException(status_code=500, detail=str(e))

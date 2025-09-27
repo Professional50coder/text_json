@@ -141,3 +141,67 @@ def process_ocr_response_to_structured_json(response: vision.AnnotateImageRespon
         page_data["key_value_pairs"] = kv_pairs
 
     return page_data
+
+def save_results(all_pages_data: list, output_dir: str, unique_filename: str) -> dict:
+    """Save OCR results in multiple formats with unique filenames."""
+    results = {}
+    
+    # # 1. Save complete JSON with all data
+    # json_path = os.path.join(output_dir, f"{unique_filename}_complete.json")
+    # with open(json_path, 'w', encoding='utf-8') as f:
+    #     json.dump(all_pages_data, f, indent=2, ensure_ascii=False)
+    # results['complete_json'] = json_path
+    
+    # 2. Save text-only version
+    text_only_data = []
+    all_text = []
+    for page in all_pages_data:
+        if 'full_text' in page and page['has_content']:
+            text_only_data.append({
+                "page_number": page['page_number'],
+                "text": page['full_text'],
+                "languages": page.get('detected_languages', []),
+                "word_count": page.get('word_count', 0)
+            })
+            all_text.append(f"=== Page {page['page_number']} ===\n{page['full_text']}")
+    
+    text_json_path = os.path.join(output_dir, f"{unique_filename}_text_only.json")
+    with open(text_json_path, 'w', encoding='utf-8') as f:
+        json.dump(text_only_data, f, indent=2, ensure_ascii=False)
+    results['text_json'] = text_json_path
+    
+    # # 3. Save as plain text file
+    # txt_path = os.path.join(output_dir, f"{unique_filename}_extracted_text.txt")
+    # with open(txt_path, 'w', encoding='utf-8') as f:
+    #     f.write('\n\n'.join(all_text))
+    # results['text_file'] = txt_path
+    
+    # 4. Save summary
+    # total_pages = len(all_pages_data)
+    # pages_with_content = sum(1 for page in all_pages_data if page.get('has_content', False))
+    # total_words = sum(page.get('word_count', 0) for page in all_pages_data)
+    # all_languages = set()
+    # for page in all_pages_data:
+    #     all_languages.update(page.get('detected_languages', []))
+    
+    # summary = {
+    #     "processing_info": {
+    #         "timestamp": datetime.now().isoformat(),
+    #         "source_pdf": PDF_PATH,
+    #         "unique_id": unique_filename
+    #     },
+    #     "statistics": {
+    #         "total_pages": total_pages,
+    #         "pages_with_content": pages_with_content,
+    #         "total_words": total_words,
+    #         "detected_languages": list(all_languages)
+    #     },
+    #     "files_created": results
+    # }
+    
+    # summary_path = os.path.join(output_dir, f"{unique_filename}_summary.json")
+    # with open(summary_path, 'w', encoding='utf-8') as f:
+    #     json.dump(summary, f, indent=2, ensure_ascii=False)
+    # results['summary'] = summary_path
+    
+    return results
