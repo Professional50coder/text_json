@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+pydantic
+pymongo
+pymupdf
+SpeechRecognition
+pydub
+python-multipart
