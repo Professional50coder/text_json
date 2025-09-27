@@ -9,6 +9,10 @@ from datetime import datetime
 from typing import Optional, List
 import logging
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # For PDFs
 import fitz  # PyMuPDF
@@ -20,6 +24,9 @@ from pydub.utils import make_chunks
 
 # For MongoDB (optional)
 from pymongo import MongoClient
+
+# Import routers
+from routers.llm_workflow_routes import router as llm_workflow_router
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -39,6 +46,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Include routers
+app.include_router(llm_workflow_router)
 
 # Configuration
 MAX_FILE_SIZE = 50 * 1024 * 1024  # 50MB
