@@ -8,11 +8,11 @@ from google.cloud import vision
 from google.oauth2 import service_account
 
 # --- Configuration ---
-PDF_PATH = r"C:\Users\rcgop\Downloads\The Unfair Advantage-20250927T082820Z-1-001\The Unfair Advantage\Business Plans\sample_odia_1.pdf"  # Update PDF path
+PDF_PATH = r"C:\Users\USER\Downloads\sample_english_5.pdf"  # Update PDF path
 OUTPUT_DIR = "pdf_output"  # Directory to save images and final JSON
 IMAGE_DPI = 300            # DPI for PDF to image conversion
 CLEAN_IMAGES = True        # Delete images after OCR
-SERVICE_ACCOUNT_JSON = r"C:\Users\rcgop\Downloads\gen-lang-client-0858700453-3ffbc840e488.json"  # Your service account JSON
+SERVICE_ACCOUNT_JSON = r"C:\Users\USER\OneDrive\Desktop\text_json\gen-lang-client-0858700453-3ffbc840e488.json"  # Your service account JSON
 
 # Language configuration for multilingual support
 LANGUAGE_HINTS = ["en", "hi", "or", "bn", "ta", "te", "ml", "kn", "gu", "pa", "mr", "as", "es", "fr", "de", "ja", "ko", "zh", "ar", "ru"]  # Added Indian languages including Odia
@@ -128,11 +128,8 @@ def process_ocr_response_to_structured_json(response: vision.AnnotateImageRespon
         "page_number": page_num,
         "text_content": lines,
         "full_text": '\n'.join(lines),
-        "word_count": len(' '.join(lines).split()) if lines else 0,
-        "character_count": len(full_text),
         "has_content": bool(lines),
         "detected_languages": detected_languages,
-        "processing_timestamp": datetime.now().isoformat()
     }
     
     # Extract key-value pairs if any text exists
@@ -151,11 +148,11 @@ def save_results(all_pages_data: list, output_dir: str, unique_filename: str) ->
     """Save OCR results in multiple formats with unique filenames."""
     results = {}
     
-    # 1. Save complete JSON with all data
-    json_path = os.path.join(output_dir, f"{unique_filename}_complete.json")
-    with open(json_path, 'w', encoding='utf-8') as f:
-        json.dump(all_pages_data, f, indent=2, ensure_ascii=False)
-    results['complete_json'] = json_path
+    # # 1. Save complete JSON with all data
+    # json_path = os.path.join(output_dir, f"{unique_filename}_complete.json")
+    # with open(json_path, 'w', encoding='utf-8') as f:
+    #     json.dump(all_pages_data, f, indent=2, ensure_ascii=False)
+    # results['complete_json'] = json_path
     
     # 2. Save text-only version
     text_only_data = []
@@ -175,39 +172,39 @@ def save_results(all_pages_data: list, output_dir: str, unique_filename: str) ->
         json.dump(text_only_data, f, indent=2, ensure_ascii=False)
     results['text_json'] = text_json_path
     
-    # 3. Save as plain text file
-    txt_path = os.path.join(output_dir, f"{unique_filename}_extracted_text.txt")
-    with open(txt_path, 'w', encoding='utf-8') as f:
-        f.write('\n\n'.join(all_text))
-    results['text_file'] = txt_path
+    # # 3. Save as plain text file
+    # txt_path = os.path.join(output_dir, f"{unique_filename}_extracted_text.txt")
+    # with open(txt_path, 'w', encoding='utf-8') as f:
+    #     f.write('\n\n'.join(all_text))
+    # results['text_file'] = txt_path
     
     # 4. Save summary
-    total_pages = len(all_pages_data)
-    pages_with_content = sum(1 for page in all_pages_data if page.get('has_content', False))
-    total_words = sum(page.get('word_count', 0) for page in all_pages_data)
-    all_languages = set()
-    for page in all_pages_data:
-        all_languages.update(page.get('detected_languages', []))
+    # total_pages = len(all_pages_data)
+    # pages_with_content = sum(1 for page in all_pages_data if page.get('has_content', False))
+    # total_words = sum(page.get('word_count', 0) for page in all_pages_data)
+    # all_languages = set()
+    # for page in all_pages_data:
+    #     all_languages.update(page.get('detected_languages', []))
     
-    summary = {
-        "processing_info": {
-            "timestamp": datetime.now().isoformat(),
-            "source_pdf": PDF_PATH,
-            "unique_id": unique_filename
-        },
-        "statistics": {
-            "total_pages": total_pages,
-            "pages_with_content": pages_with_content,
-            "total_words": total_words,
-            "detected_languages": list(all_languages)
-        },
-        "files_created": results
-    }
+    # summary = {
+    #     "processing_info": {
+    #         "timestamp": datetime.now().isoformat(),
+    #         "source_pdf": PDF_PATH,
+    #         "unique_id": unique_filename
+    #     },
+    #     "statistics": {
+    #         "total_pages": total_pages,
+    #         "pages_with_content": pages_with_content,
+    #         "total_words": total_words,
+    #         "detected_languages": list(all_languages)
+    #     },
+    #     "files_created": results
+    # }
     
-    summary_path = os.path.join(output_dir, f"{unique_filename}_summary.json")
-    with open(summary_path, 'w', encoding='utf-8') as f:
-        json.dump(summary, f, indent=2, ensure_ascii=False)
-    results['summary'] = summary_path
+    # summary_path = os.path.join(output_dir, f"{unique_filename}_summary.json")
+    # with open(summary_path, 'w', encoding='utf-8') as f:
+    #     json.dump(summary, f, indent=2, ensure_ascii=False)
+    # results['summary'] = summary_path
     
     return results
 

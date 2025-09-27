@@ -27,6 +27,7 @@ from pymongo import MongoClient
 
 # Import routers
 from routers.llm_workflow_routes import router as llm_workflow_router
+from routers.pdf_process_api import router as pdf_process_router
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -49,6 +50,7 @@ app.add_middleware(
 
 # Include routers
 app.include_router(llm_workflow_router)
+app.include_router(pdf_process_router)
 
 # Configuration
 MAX_FILE_SIZE = 50 * 1024 * 1024  # 50MB
