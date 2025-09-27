@@ -46,8 +46,9 @@ async def process_pdf_api(payload: PDFProcessRequest):
             if CLEAN_IMAGES:
                 os.remove(image_path)
         saved_files = save_results(all_pages_data, OUTPUT_DIR, unique_filename)
-        # Return the main JSON result
-        return JSONResponse(content=all_pages_data)
+        # Return the main JSON result as a string under 'json_data'
+        import json
+        return {"json_data": json.dumps(all_pages_data, ensure_ascii=False)}
     except Exception as e:
         logging.error(f"API error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
