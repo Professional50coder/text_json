@@ -34,44 +34,24 @@ class BusinessPlanDetails(BaseModel):
     # Impact combined
     social_and_environmental_impact: Optional[str] = None  # combines social_impact, environmental_impact
 
-class EvidenceItem(BaseModel):
-    claim: str
-    supporting_assets: List[str] = []  # e.g., ["audio_01@00:12", "img_02"]
-    confidence: Optional[float] = None  # 0..1
-    excerpt: Optional[str] = None  # short quoted excerpt (if available)
-
-
-class SectionScores(BaseModel):
-    problem: Optional[int] = Field(None, ge=0, le=5)
-    market: Optional[int] = Field(None, ge=0, le=5)
-    value_proposition: Optional[int] = Field(None, ge=0, le=5)
-    business_model: Optional[int] = Field(None, ge=0, le=5)
-    team: Optional[int] = Field(None, ge=0, le=5)
-    traction: Optional[int] = Field(None, ge=0, le=5)
-    funding_readiness: Optional[int] = Field(None, ge=0, le=5)
 
 
 class BusinessPlanAnalysis(BaseModel):
-    submission_id: str
-    analysis_timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    model_provenance: Dict[str, Any] = {}  # e.g. {"llm_model":"gpt-4o-mini","prompt_version":"v1"}
-
-    # overall confidence 0..1
     overall_confidence: Optional[float] = Field(None, ge=0.0, le=1.0)
 
-    # structured scores
-    scores: SectionScores = Field(default_factory=SectionScores)
+    # Section scores combined into fewer category scores (0 to 5)
+    problem_and_market_score: Optional[int] = Field(None, ge=0, le=5)  # combines problem and market assessment
+    value_and_model_score: Optional[int] = Field(None, ge=0, le=5)    # combines value proposition and business model
+    team_and_traction_score: Optional[int] = Field(None, ge=0, le=5)  # combines team and traction
+    funding_readiness_score: Optional[int] = Field(None, ge=0, le=5)  # funding readiness
 
-    # textual outputs
+    # Textual feedback fields
     strengths: List[str] = []
     weaknesses: List[str] = []
-    prioritized_actions: List[str] = []  # prioritized next steps / experiments
+    prioritized_actions: List[str] = []  # prioritized next steps or experiments
     red_flags: List[str] = []
     risk_assessment: Optional[str] = None
-    automated_feedback: Optional[str] = None  # ~200-400 words critique summary
+    automated_feedback: Optional[str] = None  # 200-400 word critique summary
 
-    # evidence map ties claims to assets/excerpts
-    evidence_map: List[EvidenceItem] = []
-
-    # optional numerical KPIs extracted (if any)
-    extracted_kpis: Dict[str, Any] = {} 
+    # Extracted numerical KPIs (key performance indicators)
+    extracted_kpis: list[str] = []

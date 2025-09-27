@@ -63,10 +63,18 @@ def analyze_business_plan(json_data: Any) -> BusinessPlanAnalysis:
     response = structured_llm.invoke(prompt)
     # Minimal post-processing for dict fields
     data = response if isinstance(response, dict) else response.dict() if hasattr(response, 'dict') else response
-    # Ensure model_provenance is a dict
-    if 'model_provenance' in data and not isinstance(data['model_provenance'], dict):
-        data['model_provenance'] = {'value': data['model_provenance']}
-    # Ensure extracted_kpis is a dict
-    if 'extracted_kpis' in data and not isinstance(data['extracted_kpis'], dict):
-        data['extracted_kpis'] = {'value': data['extracted_kpis']}
+    # Robust post-processing for extracted_kpis
+    kpis = data.get('extracted_kpis', [])
+    if isinstance(kpis, dict):
+        # If dict, flatten values to list
+        kpis = [str(v) for v in kpis.values()]
+    elif isinstance(kpis, str):
+        # If string, wrap in list
+        kpis = [kpis]
+    elif isinstance(kpis, list):
+        # If already list, ensure all items are strings
+        kpis = [str(x) for x in kpis]
+    else:
+        kpis = []
+    data['extracted_kpis'] = kpis
     return BusinessPlanAnalysis(**data)
