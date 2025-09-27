@@ -40,18 +40,35 @@ class BusinessPlanAnalysis(BaseModel):
     overall_confidence: Optional[float] = Field(None, ge=0.0, le=1.0)
 
     # Section scores combined into fewer category scores (0 to 5)
-    problem_and_market_score: Optional[int] = Field(None, ge=0, le=5)  # combines problem and market assessment
-    value_and_model_score: Optional[int] = Field(None, ge=0, le=5)    # combines value proposition and business model
-    team_and_traction_score: Optional[int] = Field(None, ge=0, le=5)  # combines team and traction
-    funding_readiness_score: Optional[int] = Field(None, ge=0, le=5)  # funding readiness
+    problem_and_market_score: Optional[int] = Field(None, ge=0, le=5)
+    value_and_model_score: Optional[int] = Field(None, ge=0, le=5)
+    team_and_traction_score: Optional[int] = Field(None, ge=0, le=5)
+    funding_readiness_score: Optional[int] = Field(None, ge=0, le=5)
+    market_feasibility_score: Optional[int] = Field(None, ge=0, le=5)
+    financial_feasibility_score: Optional[int] = Field(None, ge=0, le=5)
+    technical_feasibility_score: Optional[int] = Field(None, ge=0, le=5)
 
     # Textual feedback fields
     strengths: List[str] = []
     weaknesses: List[str] = []
-    prioritized_actions: List[str] = []  # prioritized next steps or experiments
+    prioritized_actions: List[str] = []
     red_flags: List[str] = []
     risk_assessment: Optional[str] = None
-    automated_feedback: Optional[str] = None  # 200-400 word critique summary
+    automated_feedback: Optional[str] = None
+
+    # Optional textual feedback for feasibility aspects
+    market_feasibility_feedback: Optional[str] = None
+    financial_feasibility_feedback: Optional[str] = None
+    technical_feasibility_feedback: Optional[str] = None
+
+    # Basis or rationale for scoring all scores
+    problem_and_market_basis: Optional[str] = None
+    value_and_model_basis: Optional[str] = None
+    team_and_traction_basis: Optional[str] = None
+    funding_readiness_basis: Optional[str] = None
+    market_feasibility_basis: Optional[str] = None
+    financial_feasibility_basis: Optional[str] = None
+    technical_feasibility_basis: Optional[str] = None  # 200-400 word critique summary
 
     # Extracted numerical KPIs (key performance indicators)
     extracted_kpis: list[str] = []

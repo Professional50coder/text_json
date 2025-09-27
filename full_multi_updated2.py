@@ -12,7 +12,7 @@ PDF_PATH = r"C:\Users\USER\Downloads\sample_english_5.pdf"  # Update PDF path
 OUTPUT_DIR = "pdf_output"  # Directory to save images and final JSON
 IMAGE_DPI = 300            # DPI for PDF to image conversion
 CLEAN_IMAGES = True        # Delete images after OCR
-SERVICE_ACCOUNT_JSON = r"C:\Users\USER\OneDrive\Desktop\text_json\gen-lang-client-0858700453-3ffbc840e488.json"  # Your service account JSON
+SERVICE_ACCOUNT_JSON = r"gen-lang-client-0858700453-3f96694fab49.json"  # Your service account JSON
 
 # Language configuration for multilingual support
 LANGUAGE_HINTS = ["en", "hi", "or", "bn", "ta", "te", "ml", "kn", "gu", "pa", "mr", "as", "es", "fr", "de", "ja", "ko", "zh", "ar", "ru"]  # Added Indian languages including Odia
