@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 import os
 import logging
-from full_multi_updated2 import get_unique_filename, convert_pdf_to_images, perform_ocr_on_image, process_ocr_response_to_structured_json, save_results, client, IMAGE_DPI, OUTPUT_DIR, CLEAN_IMAGES
+from utils.full_multi_updated2 import get_unique_filename, convert_pdf_to_images, perform_ocr_on_image, process_ocr_response_to_structured_json, save_results, client, IMAGE_DPI, OUTPUT_DIR, CLEAN_IMAGES
 
 
 class PDFProcessRequest(BaseModel):

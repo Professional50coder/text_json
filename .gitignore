@@ -77,3 +77,6 @@ dist/
 # Ignore cache from all subfolders
 llm_workflows/__pycache__/
 routers/__pycache__/
+utils/__pycache__/
+
+gen-lang-client-0858700453-3ffbc840e488[1].json

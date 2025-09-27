@@ -7,12 +7,10 @@ from datetime import datetime
 from google.cloud import vision
 from google.oauth2 import service_account
 
-# --- Configuration ---
-PDF_PATH = r"C:\Users\USER\Downloads\sample_english_5.pdf"  # Update PDF path
 OUTPUT_DIR = "pdf_output"  # Directory to save images and final JSON
 IMAGE_DPI = 300            # DPI for PDF to image conversion
 CLEAN_IMAGES = True        # Delete images after OCR
-SERVICE_ACCOUNT_JSON = r"C:\Users\USER\OneDrive\Desktop\text_json\gen-lang-client-0858700453-3ffbc840e488.json"  # Your service account JSON
+SERVICE_ACCOUNT_JSON = r"C:\Users\swati\OneDrive\Desktop\text_json\gen-lang-client-0858700453-3ffbc840e488[1].json"  # Your service account JSON
 
 # Language configuration for multilingual support
 LANGUAGE_HINTS = ["en", "hi", "or", "bn", "ta", "te", "ml", "kn", "gu", "pa", "mr", "as", "es", "fr", "de", "ja", "ko", "zh", "ar", "ru"]  # Added Indian languages including Odia
@@ -143,130 +141,3 @@ def process_ocr_response_to_structured_json(response: vision.AnnotateImageRespon
         page_data["key_value_pairs"] = kv_pairs
 
     return page_data
-
-def save_results(all_pages_data: list, output_dir: str, unique_filename: str) -> dict:
-    """Save OCR results in multiple formats with unique filenames."""
-    results = {}
-    
-    # # 1. Save complete JSON with all data
-    # json_path = os.path.join(output_dir, f"{unique_filename}_complete.json")
-    # with open(json_path, 'w', encoding='utf-8') as f:
-    #     json.dump(all_pages_data, f, indent=2, ensure_ascii=False)
-    # results['complete_json'] = json_path
-    
-    # 2. Save text-only version
-    text_only_data = []
-    all_text = []
-    for page in all_pages_data:
-        if 'full_text' in page and page['has_content']:
-            text_only_data.append({
-                "page_number": page['page_number'],
-                "text": page['full_text'],
-                "languages": page.get('detected_languages', []),
-                "word_count": page.get('word_count', 0)
-            })
-            all_text.append(f"=== Page {page['page_number']} ===\n{page['full_text']}")
-    
-    text_json_path = os.path.join(output_dir, f"{unique_filename}_text_only.json")
-    with open(text_json_path, 'w', encoding='utf-8') as f:
-        json.dump(text_only_data, f, indent=2, ensure_ascii=False)
-    results['text_json'] = text_json_path
-    
-    # # 3. Save as plain text file
-    # txt_path = os.path.join(output_dir, f"{unique_filename}_extracted_text.txt")
-    # with open(txt_path, 'w', encoding='utf-8') as f:
-    #     f.write('\n\n'.join(all_text))
-    # results['text_file'] = txt_path
-    
-    # 4. Save summary
-    # total_pages = len(all_pages_data)
-    # pages_with_content = sum(1 for page in all_pages_data if page.get('has_content', False))
-    # total_words = sum(page.get('word_count', 0) for page in all_pages_data)
-    # all_languages = set()
-    # for page in all_pages_data:
-    #     all_languages.update(page.get('detected_languages', []))
-    
-    # summary = {
-    #     "processing_info": {
-    #         "timestamp": datetime.now().isoformat(),
-    #         "source_pdf": PDF_PATH,
-    #         "unique_id": unique_filename
-    #     },
-    #     "statistics": {
-    #         "total_pages": total_pages,
-    #         "pages_with_content": pages_with_content,
-    #         "total_words": total_words,
-    #         "detected_languages": list(all_languages)
-    #     },
-    #     "files_created": results
-    # }
-    
-    # summary_path = os.path.join(output_dir, f"{unique_filename}_summary.json")
-    # with open(summary_path, 'w', encoding='utf-8') as f:
-    #     json.dump(summary, f, indent=2, ensure_ascii=False)
-    # results['summary'] = summary_path
-    
-    return results
-
-# ---------------- Main ---------------- #
-
-def main():
-    if not os.path.exists(PDF_PATH):
-        logging.error(f"PDF file not found at '{PDF_PATH}'. Update PDF_PATH.")
-        return
-
-    # Generate unique filename for this processing run
-    unique_filename = get_unique_filename(PDF_PATH)
-    logging.info(f"Processing PDF with unique ID: {unique_filename}")
-
-    # Convert PDF to images
-    image_files = convert_pdf_to_images(PDF_PATH, OUTPUT_DIR, IMAGE_DPI)
-    if not image_files:
-        logging.error("No images were generated. Exiting.")
-        return
-
-    all_pages_data = []
-
-    for i, image_path in enumerate(image_files):
-        logging.info(f"Performing OCR on {image_path}...")
-        try:
-            response = perform_ocr_on_image(client, image_path)
-            page_data = process_ocr_response_to_structured_json(response, i + 1)
-            all_pages_data.append(page_data)
-            
-            # Log processing results
-            languages = ', '.join(page_data.get('detected_languages', ['None']))
-            logging.info(f"Page {i + 1} complete - Characters: {page_data.get('character_count', 0)}, "
-                        f"Words: {page_data.get('word_count', 0)}, Languages: {languages}")
-
-            if CLEAN_IMAGES:
-                os.remove(image_path)
-                logging.info(f"Removed image file: {image_path}")
-        except Exception as e:
-            logging.error(f"OCR failed for {image_path}: {e}")
-            all_pages_data.append({
-                "page_number": i + 1, 
-                "error": str(e),
-                "has_content": False,
-                "processing_timestamp": datetime.now().isoformat()
-            })
-
-    # Save results in multiple formats
-    logging.info("Saving results...")
-    saved_files = save_results(all_pages_data, OUTPUT_DIR, unique_filename)
-    
-    # Final summary
-    logging.info("=" * 50)
-    logging.info("OCR PROCESSING COMPLETE")
-    logging.info("=" * 50)
-    logging.info(f"Unique ID: {unique_filename}")
-    logging.info(f"Total pages processed: {len(all_pages_data)}")
-    
-    # Log all created files
-    for file_type, file_path in saved_files.items():
-        logging.info(f"{file_type.upper()}: {file_path}")
-    
-    logging.info("=" * 50)
-
-if __name__ == "__main__":
-    main()

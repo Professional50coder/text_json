@@ -13,19 +13,6 @@ class LLMRequest(BaseModel):
 
 router = APIRouter(prefix="/llm-workflow", tags=["LLM Workflows"])
 
-@router.post("/structured-template", response_model=BusinessPlanDetails)
-async def create_structured_business_plan(request: LLMRequest):
-    """
-    Extract and structure business plan data using LLM.
-    
-    Takes raw JSON business plan data and returns structured BusinessPlanDetails.
-    Requires Google API key in request or GOOGLE_API_KEY environment variable.
-    """
-    try:
-        result = get_structured_business_plan(request.json_data)
-        return result
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error processing business plan: {str(e)}")
 
 @router.post("/plan-feedback", response_model=BusinessPlanFeedback)
 async def generate_plan_feedback(request: LLMRequest):
