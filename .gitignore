@@ -1,4 +1,4 @@
-# Python
+# Python cache
 __pycache__/
 **/__pycache__/
 *.py[cod]
@@ -6,10 +6,13 @@ __pycache__/
 *.pyd
 *.pyc
 *.pdb
-*.egg
-*.eggs
-*.env
+
+# Environment files
 .env
+*.env
+secrets.env
+
+# Virtual environments
 venv/
 ENV/
 env/
@@ -67,5 +70,10 @@ build/
 dist/
 *.egg-info/
 
-# Ignore secrets
-secrets.env
+# Ignore eggs
+*.egg
+*.eggs
+
+# Ignore cache from all subfolders
+llm_workflows/__pycache__/
+routers/__pycache__/
