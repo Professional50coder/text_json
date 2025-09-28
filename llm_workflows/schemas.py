@@ -72,3 +72,4 @@ class BusinessPlanAnalysis(BaseModel):
 
     # Extracted numerical KPIs (key performance indicators)
     extracted_kpis: list[str] = []
+    news_summary: Optional[str] = None  # Summary of relevant news articles

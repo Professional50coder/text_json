@@ -17,6 +17,8 @@ load_dotenv()
 # Import routers
 from routers.llm_workflow_routes import router as llm_workflow_router
 from routers.pdf_process_api import router as pdf_process_router
+from llm_workflows.multilin_structured_output import router as multilin_structured_output_router
+from llm_workflows.chat_query import router as chat_router  # Importing the Chat API router
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -40,3 +42,5 @@ app.add_middleware(
 # Include routers
 app.include_router(llm_workflow_router)
 app.include_router(pdf_process_router)
+app.include_router(multilin_structured_output_router)
+app.include_router(chat_router)  # Including the Chat API router
