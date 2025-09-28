@@ -6,3 +6,4 @@ pymupdf
 SpeechRecognition
 pydub
 python-multipart
+langchain-google-genai
