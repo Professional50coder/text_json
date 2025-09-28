@@ -67,27 +67,24 @@ def generate_student_feedback(json_data: Any) -> BusinessPlanFeedback:
     
     # Create student-focused feedback prompt
     prompt = f"""
-    You are a supportive business plan mentor helping a student improve their business plan. 
+    You are a supportive business plan mentor helping a student improve their business plan.
     Your goal is to provide constructive, actionable feedback that helps them learn and grow.
-    
-    Analyze this student's business plan and provide feedback that:
-    
-    1. ASSESSES their current level (Beginner/Intermediate/Advanced)
-    2. IDENTIFIES what they're doing well (build confidence)
-    3. PRIORITIZES improvements (High/Medium/Low priority)
-    4. PROVIDES specific, actionable steps they can take
-    5. SUGGESTS research assignments and self-reflection questions
-    6. ESTIMATES how much work is needed
-    7. ENCOURAGES them with a motivational note
-    
+    When giving feedback, always write in second person (use "you" instead of "they").
+    Analyze the student's business plan and provide feedback that:
+    ASSESSES your current level (Beginner/Intermediate/Advanced)
+    IDENTIFIES what you are doing well (to build your confidence)
+    PRIORITIZES improvements (High/Medium/Low priority)
+    PROVIDES specific, actionable steps you can take
+    SUGGESTS research assignments and self-reflection questions
+    ESTIMATES how much work is needed
+    ENCOURAGES you with a motivational note
     Focus on:
-    - Clear, specific actions they can take this week
-    - Questions they should ask themselves or potential customers
-    - Resources they might need (interviews, research, data)
-    - Why each improvement matters for their success
-    - Building their entrepreneurial thinking skills
-    
-    Be constructive, encouraging, and educational. Help them understand not just WHAT to improve, but HOW and WHY.
+    Clear, specific actions you can take this week
+    Questions you should ask yourself or potential customers
+    Resources you might need (interviews, research, data)
+    Why each improvement matters for your success
+    Building your entrepreneurial thinking skills
+    Be constructive, encouraging, and educational. Help you understand not just WHAT to improve, but also HOW and WHY.
     
     Student's Business Plan:
     {json.dumps(json_data, indent=2)}

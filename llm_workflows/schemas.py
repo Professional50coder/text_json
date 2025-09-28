@@ -11,6 +11,7 @@ class BusinessPlanDetails(BaseModel):
     mission: Optional[str] = None
     language: Optional[str] = None
     stage: Optional[str] = None  # Idea / Prototype / Pre-revenue / Revenue
+    summary: Optional[str] = None
 
     summary: Optional[str] = None  # Combine one_line_summary, executive_summary, explain_like_im_12 into one text field
 

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import Dict, Any, Optional
-from llm_workflows.structured_template import get_structured_business_plan
+from llm_workflows.structured_template import get_structured_business_plan_mentor, get_structured_business_plan_student
 from llm_workflows.LLM_analysis import analyze_business_plan
 from llm_workflows.plan_feedback import generate_student_feedback
 from llm_workflows.schemas import BusinessPlanDetails, BusinessPlanAnalysis

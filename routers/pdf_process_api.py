@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import List, Union
 import requests
-from llm_workflows.structured_template import get_structured_business_plan
+from llm_workflows.structured_template import get_structured_business_plan_student, get_structured_business_plan_mentor
 import os
 import logging
 from utils.full_multi_updated2 import convert_pdf_to_images, perform_ocr_on_image, save_results, client, IMAGE_DPI, OUTPUT_DIR, CLEAN_IMAGES
@@ -61,11 +61,14 @@ async def process_pdf_api(payload: Union[PayloadItem, List[PayloadItem]]):
             all_pages_data.sort(key=lambda p: p.get('page_number', 0))
             # Save results (optional, can be commented out)
             # save_results(all_pages_data, OUTPUT_DIR, "api_result")
-            structured_data = get_structured_business_plan(all_pages_data)
-            print("results", structured_data)
+            student_structured = get_structured_business_plan_student(all_pages_data)
+            mentor_structured = get_structured_business_plan_mentor(all_pages_data)
+            print("student_structured", student_structured)
+            print("mentor_structured", mentor_structured)
             return {
                 "transcribe": json.dumps(all_pages_data, ensure_ascii=False),
-                "structured_data": structured_data
+                "structured_data_student": student_structured,
+                "structured_data_mentor": mentor_structured
             }
         except Exception as e:
             logging.error(f"API error: {e}")
@@ -79,10 +82,12 @@ async def process_pdf_api(payload: Union[PayloadItem, List[PayloadItem]]):
             transcript = generate_subtitles(url)
             # Apply get_structured_business_plan to transcript as a single page
             pages_data = [{"full_text": transcript}]
-            structured_data = get_structured_business_plan(pages_data)
+            student_structured = get_structured_business_plan_student(pages_data)
+            mentor_structured = get_structured_business_plan_mentor(pages_data)
             return {
                 "transcribe": transcript,
-                "structured_data": structured_data
+                "structured_data_student": student_structured,
+                "structured_data_mentor": mentor_structured
             }
         except Exception as e:
             logging.error(f"Audio API error: {e}")
@@ -95,8 +100,13 @@ async def process_pdf_api(payload: Union[PayloadItem, List[PayloadItem]]):
             status = summary.get('results', [{}])[0].get('status', '')
             # Apply get_structured_business_plan to status as a single page
             pages_data = [{"full_text": status}]
-            structured_data = get_structured_business_plan(pages_data)
-            return {"transcribe": status, "structured_data": structured_data}
+            student_structured = get_structured_business_plan_student(pages_data)
+            mentor_structured = get_structured_business_plan_mentor(pages_data)
+            return {
+                "transcribe": status,
+                "structured_data_student": student_structured,
+                "structured_data_mentor": mentor_structured
+            }
         except Exception as e:
             logging.error(f"Fallback error: {e}")
             raise HTTPException(status_code=500, detail=f"Fallback error: {e}")
