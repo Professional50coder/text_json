@@ -30,6 +30,7 @@ def get_structured_business_plan_student(json_data: Dict[str, Any]) -> BusinessP
     Fill in as many fields as possible based on the provided data. If information is not available, leave fields as None or empty lists as appropriate.
     When giving feedback or structuring the data, always write in second person (use "you" instead of "they").
     The summary field should be in points or bullet format for clarity highlighting key aspects of the business plan.
+    the scores should be on a 0-10 scale, where 0 is poor and 10 is excellent on various dimensions of the business plan.
     
     Business Plan Data:
     {json.dumps(json_data, indent=2)}
@@ -68,6 +69,8 @@ def get_structured_business_plan_mentor(json_data: Dict[str, Any]) -> BusinessPl
     Analyze the following business plan data and extract/structure the information according to the BusinessPlanDetails schema.
     Fill in as many fields as possible based on the provided data. If information is not available, leave fields as None or empty lists as appropriate.
     The summary field should be in points or bullet format for clarity highlighting key aspects of the business plan.
+    The scores should be on a 0-10 scale, where 0 is poor and 10 is excellent on various dimensions of the business plan.
+
     
     Business Plan Data:
     {json.dumps(json_data, indent=2)}

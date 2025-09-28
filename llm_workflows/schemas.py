@@ -17,23 +17,31 @@ class BusinessPlanDetails(BaseModel):
 
     # Problem and solution combined sections
     problem_and_customer: Optional[str] = None  # combines problem_statement, target_customer, evidence_of_problem
+    problem_and_customer_score: Optional[int] = Field(None, ge=0, le=10)  # 0-10 score
     solution_and_features: Optional[str] = None  # combines solution_description, key_features, usp
+    solution_and_features_score: Optional[int] = Field(None, ge=0, le=10)  # 0-10 score
 
     # Market and competition combined
     market_and_competitors: Optional[str] = None  # combines market_segments, competitors
+    market_and_competitors_score: Optional[int] = Field(None, ge=0, le=10)  # 0-10 score
     channels_and_revenue: Optional[str] = None  # combines channels, revenue_streams, price_points, cost_structure
+    channels_and_revenue_score: Optional[int] = Field(None, ge=0, le=10)  # 0-10 score
 
     # Operations and team combined
     operations_and_team: Optional[str] = None  # combines operations_summary, suppliers_and_logistics, location_of_operations, team_summary, missing_skills
+    operations_and_team_score: Optional[int] = Field(None, ge=0, le=10)  # 0-10 score
 
     # Traction and funding combined
     traction_and_funding: Optional[str] = None  # combines traction, ask, funding_required, funding_use
+    traction_and_funding_score: Optional[int] = Field(None, ge=0, le=10)  # 0-10 score
 
     # Risks and mitigation combined
     risks_and_mitigation: Optional[str] = None  # combines risks, mitigation
+    risks_and_mitigation_score: Optional[int] = Field(None, ge=0, le=10)  # 0-10 score
 
     # Impact combined
     social_and_environmental_impact: Optional[str] = None  # combines social_impact, environmental_impact
+    social_and_environmental_impact_score: Optional[int] = Field(None, ge=0, le=10)  # 0-10 score
 
 
 
