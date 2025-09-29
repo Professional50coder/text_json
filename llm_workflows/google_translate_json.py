@@ -36,7 +36,7 @@ class GoogleTranslateJSONConverter:
 
     def __init__(self, project_id: str = None):
         """Initialize Google Translate client"""
-        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"C:\Users\USER\OneDrive\Desktop\text_json\gen-lang-client-0858700453-3f96694fab49.json"
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"C:\Users\swati\OneDrive\Desktop\text_json\gen-lang-client-0858700453-3ffbc840e488[1].json"
         self.translate_client = translate.Client()
 
     def detect_language(self, text: str) -> str:

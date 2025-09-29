@@ -67,7 +67,7 @@ async def process_pdf_api(payload: Union[PayloadItem, List[PayloadItem]]):
             print("mentor_structured", mentor_structured)
             return {
                 "transcribe": json.dumps(all_pages_data, ensure_ascii=False),
-                "structured_data_student": student_structured,
+                "structured_data": student_structured,
                 "structured_data_mentor": mentor_structured
             }
         except Exception as e:

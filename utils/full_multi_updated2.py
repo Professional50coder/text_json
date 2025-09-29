@@ -10,7 +10,7 @@ from google.oauth2 import service_account
 
 # --- Configuration ---
 PDF_PATH = r"C:\Users\rcgop\Downloads\The Unfair Advantage-20250927T082820Z-1-001\The Unfair Advantage\Business Plans\sample_odia_1.pdf"  # Update PDF path
-SERVICE_ACCOUNT_JSON = r"C:\Users\USER\OneDrive\Desktop\text_json\gen-lang-client-0858700453-3f96694fab49.json"  # Your service account JSON
+SERVICE_ACCOUNT_JSON = r"C:\Users\swati\OneDrive\Desktop\text_json\gen-lang-client-0858700453-3ffbc840e488[1].json"  # Your service account JSON
 OUTPUT_DIR = "pdf_output_threaded"  # Directory to save results
 IMAGE_DPI = 300              # DPI for PDF to image conversion
 CLEAN_IMAGES = True          # Delete images after OCR
